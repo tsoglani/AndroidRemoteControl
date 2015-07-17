@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboardrelative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/qkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:text="Q" />
+
+    <Button
+        android:id="@+id/wkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/qkey"
+        android:layout_toRightOf="@+id/qkey"
+        android:onClick="keyboardFunction"
+        android:text="W" />
+
+    <Button
+        android:id="@+id/rkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/wkey"
+        android:layout_toRightOf="@+id/wkey"
+        android:onClick="keyboardFunction"
+        android:text="R" />
+
+    <Button
+        android:id="@+id/tkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/rkey"
+        android:layout_toRightOf="@+id/rkey"
+        android:onClick="keyboardFunction"
+        android:text="T" />
+
+    <Button
+        android:id="@+id/ykey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/tkey"
+        android:layout_toRightOf="@+id/tkey"
+        android:onClick="keyboardFunction"
+        android:text="Y" />
+
+    <Button
+        android:id="@+id/ukey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/qkey"
+        android:onClick="keyboardFunction"
+        android:text="U" />
+
+    <Button
+        android:id="@+id/ikey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ukey"
+        android:layout_toEndOf="@+id/ukey"
+        android:layout_toRightOf="@+id/ukey"
+        android:onClick="keyboardFunction"
+        android:text="I" />
+
+    <Button
+        android:id="@+id/okey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wkey"
+        android:layout_toEndOf="@+id/wkey"
+        android:layout_toRightOf="@+id/wkey"
+        android:onClick="keyboardFunction"
+        android:text="O" />
+
+    <Button
+        android:id="@+id/pkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tkey"
+        android:layout_alignStart="@+id/tkey"
+        android:layout_alignTop="@+id/okey"
+        android:onClick="keyboardFunction"
+        android:text="P" />
+
+    <Button
+        android:id="@+id/akey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/pkey"
+        android:layout_toEndOf="@+id/pkey"
+        android:layout_toRightOf="@+id/pkey"
+        android:onClick="keyboardFunction"
+        android:text="A" />
+
+    <Button
+        android:id="@+id/skey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ukey"
+        android:onClick="keyboardFunction"
+        android:text="S" />
+
+    <Button
+        android:id="@+id/dkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ikey"
+        android:layout_toEndOf="@+id/skey"
+        android:layout_toRightOf="@+id/skey"
+        android:onClick="keyboardFunction"
+        android:text="D" />
+
+    <Button
+        android:id="@+id/fkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ikey"
+        android:layout_toEndOf="@+id/dkey"
+        android:layout_toRightOf="@+id/dkey"
+        android:onClick="keyboardFunction"
+        android:text="F" />
+
+    <Button
+        android:id="@+id/gkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/okey"
+        android:layout_toEndOf="@+id/fkey"
+        android:layout_toRightOf="@+id/fkey"
+        android:onClick="keyboardFunction"
+        android:text="G" />
+
+    <Button
+        android:id="@+id/hkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pkey"
+        android:layout_toEndOf="@+id/gkey"
+        android:layout_toRightOf="@+id/gkey"
+        android:onClick="keyboardFunction"
+        android:text="H" />
+
+    <Button
+        android:id="@+id/jkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:onClick="keyboardFunction"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/skey"
+        android:text="J" />
+
+    <Button
+        android:id="@+id/kkey"
+        android:layout_width="wrap_content"
+        android:onClick="keyboardFunction"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/jkey"
+        android:layout_toEndOf="@+id/jkey"
+        android:layout_toRightOf="@+id/jkey"
+        android:text="K" />
+
+    <Button
+        android:id="@+id/lkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/kkey"
+        android:layout_toEndOf="@+id/kkey"
+        android:onClick="keyboardFunction"
+        android:layout_toRightOf="@+id/kkey"
+        android:text="L" />
+
+    <Button
+        android:id="@+id/zkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/gkey"
+        android:layout_alignStart="@+id/gkey"
+        android:layout_alignTop="@+id/lkey"
+        android:onClick="keyboardFunction"
+        android:text="Z" />
+
+    <Button
+        android:id="@+id/xkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/zkey"
+        android:onClick="keyboardFunction"
+        android:layout_toEndOf="@+id/zkey"
+        android:layout_toRightOf="@+id/zkey"
+        android:text="X" />
+
+    <Button
+        android:id="@+id/ckey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:onClick="keyboardFunction"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/jkey"
+        android:text="C" />
+
+    <Button
+        android:id="@+id/vkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ckey"
+        android:onClick="keyboardFunction"
+        android:layout_toEndOf="@+id/ckey"
+        android:layout_toRightOf="@+id/ckey"
+        android:text="V" />
+
+    <Button
+        android:id="@+id/bkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/vkey"
+        android:layout_toEndOf="@+id/vkey"
+        android:onClick="keyboardFunction"
+        android:layout_toRightOf="@+id/vkey"
+        android:text="B" />
+
+    <Button
+        android:id="@+id/nkey"
+        android:layout_width="wrap_content"
+        android:onClick="keyboardFunction"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/bkey"
+        android:layout_toEndOf="@+id/bkey"
+        android:layout_toRightOf="@+id/bkey"
+        android:text="N" />
+
+    <Button
+        android:id="@+id/mkey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/nkey"
+        android:layout_toEndOf="@+id/nkey"
+        android:layout_toRightOf="@+id/nkey"
+        android:text="M" />
+
+    <Button
+        android:id="@+id/dotkey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ckey"
+        android:text="." />
+
+    <Button
+        android:id="@+id/commakey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ckey"
+        android:layout_toEndOf="@+id/dotkey"
+        android:layout_toRightOf="@+id/dotkey"
+        android:text="," />
+
+    <Button
+        android:id="@+id/slashkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:layout_alignBottom="@+id/commakey"
+        android:layout_toEndOf="@+id/vkey"
+        android:layout_toRightOf="@+id/vkey"
+        android:text="/" />
+
+    <Button
+        android:id="@+id/questionkey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bkey"
+        android:layout_toEndOf="@+id/slashkey"
+        android:layout_toRightOf="@+id/slashkey"
+        android:text=";" />
+
+    <Button
+        android:id="@+id/duckkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nkey"
+        android:onClick="keyboardFunction"
+        android:layout_toEndOf="@+id/nkey"
+        android:layout_toRightOf="@+id/nkey"
+        android:text="\@" />
+
+    <Button
+        android:id="@+id/enterkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:text="ENTER"
+        android:layout_alignTop="@+id/tabkey"
+        android:layout_alignRight="@+id/zerokey"
+        android:layout_alignEnd="@+id/zerokey" />
+
+    <Button
+        android:id="@+id/tabkey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TAB"
+        android:layout_above="@+id/spacekey"
+        android:layout_toRightOf="@+id/backspacekey"
+        android:layout_toEndOf="@+id/backspacekey" />
+
+    <Button
+        android:id="@+id/onekey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/dotkey"
+        android:text="1" />
+
+    <Button
+        android:id="@+id/twokey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/onekey"
+        android:layout_toEndOf="@+id/onekey"
+        android:onClick="keyboardFunction"
+        android:layout_toRightOf="@+id/onekey"
+        android:text="2" />
+
+    <Button
+        android:id="@+id/threekey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/twokey"
+        android:layout_toEndOf="@+id/twokey"
+        android:onClick="keyboardFunction"
+        android:layout_toRightOf="@+id/twokey"
+        android:text="3" />
+
+    <Button
+        android:id="@+id/fourkey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:layout_alignLeft="@+id/questionkey"
+        android:layout_alignStart="@+id/questionkey"
+        android:layout_alignTop="@+id/threekey"
+        android:text="4" />
+
+    <Button
+        android:id="@+id/fivekey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:layout_alignTop="@+id/fourkey"
+        android:layout_toEndOf="@+id/fourkey"
+        android:layout_toRightOf="@+id/fourkey"
+        android:text="5" />
+
+    <Button
+        android:id="@+id/sixkey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/onekey"
+        android:text="6" />
+
+    <Button
+        android:id="@+id/sevenkey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/twokey"
+        android:layout_toEndOf="@+id/sixkey"
+        android:layout_toRightOf="@+id/sixkey"
+        android:text="7" />
+
+    <Button
+        android:id="@+id/eightkey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/twokey"
+        android:layout_toEndOf="@+id/sevenkey"
+        android:layout_toRightOf="@+id/sevenkey"
+        android:text="8" />
+
+    <Button
+        android:id="@+id/ninekey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/threekey"
+        android:layout_toEndOf="@+id/eightkey"
+        android:layout_toRightOf="@+id/eightkey"
+        android:text="9" />
+
+    <Button
+        android:id="@+id/zerokey"
+        android:onClick="keyboardFunction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fourkey"
+        android:layout_toEndOf="@+id/ninekey"
+        android:layout_toRightOf="@+id/ninekey"
+        android:text="0" />
+
+    <Button
+        android:id="@+id/backspacekey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:text="BACKSPACE"
+        android:layout_below="@+id/sixkey"
+        android:layout_toLeftOf="@+id/eightkey"
+        android:layout_toStartOf="@+id/eightkey" />
+
+    <Button
+        android:id="@+id/spacekey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="keyboardFunction"
+        android:text="SPACE"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/backspacekey"
+        android:layout_alignStart="@+id/backspacekey" />
+</RelativeLayout>
