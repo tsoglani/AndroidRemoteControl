@@ -3,7 +3,7 @@
     package="com.example.tsoglani.androidmouse" >
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
-
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
     </uses-permission>
     <application
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MouseActivity"
+            android:name=".MouseUIActivity"
             android:noHistory="true"
             android:label="@string/title_activity_mouse" >
         </activity>

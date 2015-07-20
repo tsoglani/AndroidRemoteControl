@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/keyboardrelative"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:scrollbarAlwaysDrawHorizontalTrack="true"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:id="@+id/scroll"
+    android:focusable="true">
+
+
+    <RelativeLayout
+        android:id="@+id/keyboardrelative"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+
 
     <Button
         android:id="@+id/qkey"
@@ -440,4 +455,5 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/backspacekey"
         android:layout_alignStart="@+id/backspacekey" />
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

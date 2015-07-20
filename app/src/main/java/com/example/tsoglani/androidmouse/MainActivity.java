@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -43,11 +45,39 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void connectFunction(View v) {
-        Intent intent = new Intent(this, MouseActivity.class);
+        Intent intent = new Intent(this, MouseUIActivity.class);
+        intent.putExtra("Type", "Internet");
         startActivity(intent);
     }
 
     public void bluetoothConnectFunction(View v) {
-        Toast.makeText(getApplicationContext(),"Under construction",Toast.LENGTH_LONG).show();
+
+            Toast.makeText(getApplicationContext(),"Wait",Toast.LENGTH_LONG).show();
+            new Thread(){
+                @Override
+                public void run() {
+
+
+                    try {
+                        if (new MyBlueTooth(MainActivity.this).execute().get()) {
+                            Intent intent = new Intent(MainActivity.this, MouseUIActivity.class);
+                            intent.putExtra("Type", "bluetooth");
+                            startActivity(intent);
+                        } else {
+                            runOnUiThread(new Thread() {
+                                @Override
+                                public void run() {
+
+                                    Toast.makeText(getApplicationContext(), "No Bluetooth connection", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }}.start();
+
     }
 }
