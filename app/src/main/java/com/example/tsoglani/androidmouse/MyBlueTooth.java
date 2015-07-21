@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Button;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -97,6 +98,8 @@ public class MyBlueTooth extends AsyncTask<Void, Boolean, Boolean> {
             MouseUIActivity.ps = new PrintWriter(new BufferedWriter(
                     new OutputStreamWriter(mmSocket.getOutputStream())),
                     true);
+
+            MouseUIActivity.bf=new DataInputStream(mmSocket.getInputStream()) ;
             found = true;
         } catch (Exception e) {
             e.printStackTrace();

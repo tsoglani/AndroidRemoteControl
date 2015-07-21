@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -35,8 +36,7 @@ public class InternetConnection {
             MouseUIActivity.ps = new PrintWriter(new BufferedWriter(
                     new OutputStreamWriter(socket.getOutputStream())),
                     true);
-            ;
-
+            MouseUIActivity.bf= new DataInputStream(socket.getInputStream());
         } catch (Exception e) {
             e.printStackTrace();
             if (MouseUIActivity.ps == null) {

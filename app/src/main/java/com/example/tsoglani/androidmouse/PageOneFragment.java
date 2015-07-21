@@ -20,7 +20,7 @@ public class PageOneFragment extends Fragment {
         public boolean onTouch(View v, MotionEvent event) {
             FrameLayout fl = (FrameLayout) v;
 
-            MouseUIActivity.ps.println("x:" + ((int) (5000-5000.0 * event.getY() / fl.getHeight())) + "@@" + "y:" + + ((int) (5000-5000.0 * event.getY() / fl.getHeight())) + "@@" + "z:" + ((int) (5000.0 * event.getX() / fl.getWidth())));
+            MouseUIActivity.ps.println("x:" + ((int) (5000 - 5000.0 * event.getY() / fl.getHeight())) + "@@" + "y:" + +((int) (5000 - 5000.0 * event.getY() / fl.getHeight())) + "@@" + "z:" + ((int) (5000.0 * event.getX() / fl.getWidth())));
             return true;
         }
     };
@@ -32,10 +32,11 @@ public class PageOneFragment extends Fragment {
 
         return inflater.inflate(R.layout.fragment_one, container, false);
     }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FrameLayout fl=(FrameLayout)getActivity().findViewById(R.id.mousepad);
+        FrameLayout fl = (FrameLayout) getActivity().findViewById(R.id.mousepad);
         fl.setOnTouchListener(onTouchListener);
 
     }
