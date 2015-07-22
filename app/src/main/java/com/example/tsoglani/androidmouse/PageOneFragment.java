@@ -1,4 +1,4 @@
-package com.example.tsoglani.androidmouse;
+package com.nikos.tsoglani.androidmouse;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +21,7 @@ public class PageOneFragment extends Fragment {
             FrameLayout fl = (FrameLayout) v;
 
             MouseUIActivity.ps.println("x:" + ((int) (5000 - 5000.0 * event.getY() / fl.getHeight())) + "@@" + "y:" + +((int) (5000 - 5000.0 * event.getY() / fl.getHeight())) + "@@" + "z:" + ((int) (5000.0 * event.getX() / fl.getWidth())));
+            MouseUIActivity.ps.flush();
             return true;
         }
     };
@@ -30,13 +31,13 @@ public class PageOneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        return inflater.inflate(R.layout.fragment_one, container, false);
+        return inflater.inflate(com.nikos.tsoglani.androidmouse.R.layout.fragment_one, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        FrameLayout fl = (FrameLayout) getActivity().findViewById(R.id.mousepad);
+        FrameLayout fl = (FrameLayout) getActivity().findViewById(com.nikos.tsoglani.androidmouse.R.id.mousepad);
         fl.setOnTouchListener(onTouchListener);
 
     }

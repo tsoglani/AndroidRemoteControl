@@ -1,4 +1,4 @@
-package com.example.tsoglani.androidmouse;
+package com.nikos.tsoglani.androidmouse;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -38,7 +37,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mouse);
+        setContentView(com.nikos.tsoglani.androidmouse.R.layout.activity_mouse);
         bar = getSupportActionBar();
         String type = getIntent().getStringExtra("Type");
 
@@ -58,10 +57,10 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mouse, menu);
+        getMenuInflater().inflate(com.nikos.tsoglani.androidmouse.R.menu.menu_mouse, menu);
         return true;
     }
-
+  private  Thread receiveThread;
     @Override
     public void onSensorChanged(SensorEvent event) {
 //        if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER){
@@ -69,22 +68,26 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 //        }
         if (collect) {
             collect = false;
-            new Thread() {
+            if(receiveThread.isAlive()){
+                return;
+            }
+          receiveThread=   new Thread() {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(10);
+                        Thread.sleep(100);
                         collect = true;
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
                 }
-            }.start();
+            };
+            thread.start();
             int X = 0, Y = 1, Z = 2;
-            x_axis = (TextView) findViewById(R.id.x_axis);
-            y_axis = (TextView) findViewById(R.id.y_axis);
-            z_axis = (TextView) findViewById(R.id.z_axis);
+            x_axis = (TextView) findViewById(com.nikos.tsoglani.androidmouse.R.id.x_axis);
+            y_axis = (TextView) findViewById(com.nikos.tsoglani.androidmouse.R.id.y_axis);
+            z_axis = (TextView) findViewById(com.nikos.tsoglani.androidmouse.R.id.z_axis);
             //  float[] values = event.values;
             int[] val = new int[3];
             int maxPointTheory = 8000;
@@ -125,12 +128,12 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 
     public void rightClickFunction(View v) {
         ps.println("RIGHT_CLICK");
-
+ps.flush();
     }
 
     public void leftClickFunction(View v) {
         ps.println("LEFT_CLICK");
-
+        ps.flush();
     }
 
     @Override
@@ -149,11 +152,13 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
             sensorManager.unregisterListener(this);
         }
         if (ps != null) {
+            ps.flush();
             ps.close();
             ps = null;
         }
         if (bf != null) {
             try {
+
                 bf.close();
 
             } catch (IOException e) {
@@ -184,13 +189,14 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 
 
     }
-
+private Thread thread;
     public void startReceivingImages(final Activity activity) {
-        if (ps == null||bf==null) {
+        if (ps == null||bf==null||(thread!=null&&thread.isAlive())) {
             return;
         }
         final Bitmap[] bitmapimage = new Bitmap[1];
-        Thread thread = new Thread() {
+
+         thread = new Thread() {
             @Override
             public void run() {
                 runOnUiThread(new Thread() {
@@ -212,7 +218,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
                             bytesRead = bf.read(pic, 0, pic.length);
 
                             bitmapimage[0] = BitmapFactory.decodeByteArray(pic, 0, bytesRead);
-                            final FrameLayout fr = (FrameLayout) activity.findViewById(R.id.mousepad);
+                            final FrameLayout fr = (FrameLayout) activity.findViewById(com.nikos.tsoglani.androidmouse.R.id.mousepad);
                             final Drawable draw = new BitmapDrawable(activity.getResources(), bitmapimage[0]);
                             activity.runOnUiThread(new Thread() {
                                 @Override
@@ -220,6 +226,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 
 
                                     fr.setBackgroundDrawable(draw);
+
                                 }
                             });
                         } catch (Exception e) {
@@ -245,7 +252,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        FrameLayout fragContainer = (FrameLayout) findViewById(R.id.app);
+        FrameLayout fragContainer = (FrameLayout) findViewById(com.nikos.tsoglani.androidmouse.R.id.app);
         fragContainer.removeAllViews();
         if (sensorManager != null) {
             sensorManager.unregisterListener(this);
@@ -283,7 +290,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
     public void keyboardFunction(View v) {
         Button b = (Button) v;
         ps.println("keyboard:" + b.getText().toString());
-
+ps.flush();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.example.tsoglani.androidmouse;
+package com.nikos.tsoglani.androidmouse;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -40,9 +40,9 @@ public class MyBlueTooth extends AsyncTask<Void, Boolean, Boolean> {
         context.runOnUiThread(new Thread() {
             @Override
             public void run() {
-                Button internet = (Button) context.findViewById(R.id.internetbuttonn);
+                Button internet = (Button) context.findViewById(com.nikos.tsoglani.androidmouse.R.id.internetbuttonn);
                 internet.setEnabled(false);
-                Button bluetooth = (Button) context.findViewById(R.id.bluetoothbutton);
+                Button bluetooth = (Button) context.findViewById(com.nikos.tsoglani.androidmouse.R.id.bluetoothbutton);
                 bluetooth.setEnabled(false);
             }
         });
@@ -83,14 +83,14 @@ public class MyBlueTooth extends AsyncTask<Void, Boolean, Boolean> {
         return found;
     }
 
-    BluetoothSocket mmSocket;
+    // mmSocket;
 
     // Tries to open a connection to the bluetooth printer device
     void openBT(BluetoothDevice mmDevice) throws IOException {
         try {
             // Standard SerialPortService ID
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            BluetoothSocket    mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
             mmSocket.connect(); /// waits until connected
 
             BufferedReader br = new BufferedReader(new InputStreamReader(mmSocket.getInputStream()));
@@ -101,6 +101,7 @@ public class MyBlueTooth extends AsyncTask<Void, Boolean, Boolean> {
 
             MouseUIActivity.bf=new DataInputStream(mmSocket.getInputStream()) ;
             found = true;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,9 +124,9 @@ public class MyBlueTooth extends AsyncTask<Void, Boolean, Boolean> {
         context.runOnUiThread(new Thread() {
             @Override
             public void run() {
-                Button internet = (Button) context.findViewById(R.id.internetbuttonn);
+                Button internet = (Button) context.findViewById(com.nikos.tsoglani.androidmouse.R.id.internetbuttonn);
                 internet.setEnabled(true);
-                Button bluetooth = (Button) context.findViewById(R.id.bluetoothbutton);
+                Button bluetooth = (Button) context.findViewById(com.nikos.tsoglani.androidmouse.R.id.bluetoothbutton);
                 bluetooth.setEnabled(true);
             }
         });

@@ -1,4 +1,4 @@
-package com.example.tsoglani.androidmouse;
+package com.nikos.tsoglani.androidmouse;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -13,6 +13,6 @@ public class PageThreeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        return inflater.inflate(R.layout.keyboard, container, false);
+        return inflater.inflate(com.nikos.tsoglani.androidmouse.R.layout.keyboard, container, false);
     }
 }

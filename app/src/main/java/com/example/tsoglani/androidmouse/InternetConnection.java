@@ -1,4 +1,4 @@
-package com.example.tsoglani.androidmouse;
+package com.nikos.tsoglani.androidmouse;
 
 import android.app.Activity;
 import android.content.Intent;
