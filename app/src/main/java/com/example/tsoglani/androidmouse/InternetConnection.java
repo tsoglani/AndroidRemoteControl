@@ -1,7 +1,12 @@
 package com.nikos.tsoglani.androidmouse;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,66 +28,138 @@ import java.util.Enumeration;
 /**
  * Created by tsoglani on 20/7/2015.
  */
-public class InternetConnection {
+public class InternetConnection extends Service {
 
     public static final int port = 2000;
     static Socket returnSocket = null;
 
-    public InternetConnection(Activity context) {
-        try {
-            returnSocket = null;
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
-            Socket socket = sendToAllIpInNetwork();
-            MouseUIActivity.ps = new PrintWriter(new BufferedWriter(
-                    new OutputStreamWriter(socket.getOutputStream())),
-                    true);
-            MouseUIActivity.bf= new DataInputStream(socket.getInputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (MouseUIActivity.ps == null) {
-                Toast.makeText(context.getApplicationContext(), "No connection", Toast.LENGTH_SHORT).show();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    returnSocket = null;
 
-                context.startActivity(new Intent(context, MainActivity.class));
+                    sendToAllIpInNetwork();
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    if (MouseUIActivity.ps == null) {
+                        Handler handler = new Handler(Looper.getMainLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "No connection cause: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                        startActivity(new Intent(InternetConnection.this, MainActivity.class));
+                    }
+                }
             }
-        }
+        }.start();
+
+
+        return Service.START_NOT_STICKY;
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
 
-    public static Socket sendToAllIpInNetwork() throws UnknownHostException, IOException {
+    public void sendToAllIpInNetwork() throws UnknownHostException, IOException {
 
         ArrayList<String> ipList = getLocal();
 
         for (String ip : ipList) {
+            if (returnSocket != null) {
+                break;
+            }
             for (int i = 1; i < 255; i++) {
                 final String checkIp = ip + i;
+                if (returnSocket != null) {
+                    break;
+                }
                 new Thread() {
                     public void run() {
                         try {
                             //      System.out.println(checkIp + "  :  " + InetAddress.getByName(checkIp).isReachable(2000));
 
-                            Socket s = new Socket(checkIp, port);
+                            final Socket s = new Socket(checkIp, port);
                             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
                             br.readLine();
-                            returnSocket = s;
-
-                            Log.e("success   ", checkIp);
+                            if (returnSocket == null && s != null) {
+                                returnSocket = s;
+                                MouseUIActivity.ps = new PrintWriter(new BufferedWriter(
+                                        new OutputStreamWriter(returnSocket.getOutputStream())),
+                                        true);
+                                MouseUIActivity.ps.println("LOCAL_IP");
+                                MouseUIActivity.bf = new DataInputStream(returnSocket.getInputStream());
+                                Intent intent = new Intent(InternetConnection.this, MouseUIActivity.class);
+                                intent.putExtra("Type", "Internet");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                Log.e("success   ", checkIp);
+                                Handler handler = new Handler(Looper.getMainLooper());
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getApplicationContext(), s.getInetAddress().toString(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
                         } catch (IOException ex) {
                             //   System.out.println(checkIp + " is not available");
                         }
 
                     }
                 }.start();
-                if (returnSocket != null) {
-                    break;
-                }
+//                new AsyncTask<Void, Void, Void>() {
+//
+//                    private Socket s = null;
+//
+//                    @Override
+//                    protected Void doInBackground(Void... params) {
+//                        try {
+//                            Socket s = new Socket(checkIp, port);
+//                            BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+//
+//                            br.readLine();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    protected void onPostExecute(Void aVoid) {
+//                        if (s != null && returnSocket == null) {
+//                            returnSocket = s;
+//                            try {
+//                                MouseUIActivity.ps = new PrintWriter(new BufferedWriter(
+//                                        new OutputStreamWriter(returnSocket.getOutputStream())),
+//                                        true);
+//
+//                                MouseUIActivity.bf = new DataInputStream(returnSocket.getInputStream());
+//                                Intent intent = new Intent(context.getb, MouseUIActivity.class);
+//                                intent.putExtra("Type", "Internet");
+//                               InternetConnection.this.context.startActivity(intent);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }
+//                }.execute();
+
             }
-            if (returnSocket != null) {
-                break;
-            }
+
 
         }
 
-        return returnSocket;
     }
 
     private static ArrayList<String> getLocal() throws SocketException {
@@ -113,4 +190,6 @@ public class InternetConnection {
         }
         return list;
     }
+
+
 }

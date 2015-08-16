@@ -10,21 +10,21 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import android.support.v7.app.ActionBar;
-import android.widget.Toast;
 
 public class MouseUIActivity extends ActionBarActivity implements SensorEventListener, ActionBar.TabListener {
     private SensorManager sensorManager;
@@ -40,16 +40,34 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
         setContentView(com.nikos.tsoglani.androidmouse.R.layout.activity_mouse);
         bar = getSupportActionBar();
         String type = getIntent().getStringExtra("Type");
-
-        if (type.equalsIgnoreCase("internet")) {
-            new InternetConnection(this);
-        }
+        stopService(new Intent(this, InternetConnection.class));
+//        if (type.equalsIgnoreCase("internet")) {
+//
+//        }
+//
+//
+//        else {
+////            try {
+////
+////
+////                            InternetConnection.returnSocket = new Socket(new URL("46.198.215.227").toString(), 2000);
+////
+////
+////                if(InternetConnection.returnSocket==null){
+////                    throw new Exception("Not internet connection Found");
+////                }
+////            } catch (Exception e) {
+////                startActivity(new Intent(this, MainActivity.class));
+////              //  e.printStackTrace();
+////            }
+//        }
 
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         bar.addTab(bar.newTab().setText("MousePad").setTabListener(this));
-        bar.addTab(bar.newTab().setText("Motion Sensor").setTabListener(this));
         bar.addTab(bar.newTab().setText("Keyboard").setTabListener(this));
+        bar.addTab(bar.newTab().setText("Close PC").setTabListener(this));
 
+        bar.addTab(bar.newTab().setText("Motion Sensor").setTabListener(this));
 
     }
 
@@ -60,18 +78,21 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
         getMenuInflater().inflate(com.nikos.tsoglani.androidmouse.R.menu.menu_mouse, menu);
         return true;
     }
-  private  Thread receiveThread;
+
+    private Thread receiveThread;
+
     @Override
     public void onSensorChanged(SensorEvent event) {
 //        if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER){
 //            return;
 //        }
+
         if (collect) {
             collect = false;
-            if(receiveThread.isAlive()){
+            if (receiveThread != null && receiveThread.isAlive()) {
                 return;
             }
-          receiveThread=   new Thread() {
+            receiveThread = new Thread() {
                 @Override
                 public void run() {
                     try {
@@ -83,25 +104,26 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 
                 }
             };
-            thread.start();
+            receiveThread.start();
             int X = 0, Y = 1, Z = 2;
             x_axis = (TextView) findViewById(com.nikos.tsoglani.androidmouse.R.id.x_axis);
             y_axis = (TextView) findViewById(com.nikos.tsoglani.androidmouse.R.id.y_axis);
             z_axis = (TextView) findViewById(com.nikos.tsoglani.androidmouse.R.id.z_axis);
             //  float[] values = event.values;
             int[] val = new int[3];
-            int maxPointTheory = 8000;
-            int reallyPoints = 5000;
+            int maxPointTheory = 10;
+            //int reallyPoints = 1;
 
             for (int i = 0; i < val.length; i++) {
-                if (i == Z) {
-                    val[i] = Math.abs((int) (reallyPoints * event.values[i]));
-                } else {
-                    val[i] = Math.abs((int) (maxPointTheory * event.values[i]));
-                }
-                if (val[i] > reallyPoints && i != Z) {
-                    val[i] = Math.abs(val[i] - (reallyPoints));
-                }
+//                if (i == Z) {
+//                    val[i] = Math.abs((int) (reallyPoints * event.values[i]));
+//                } else {
+//                    val[i] = Math.abs((int) (maxPointTheory * event.values[i]));
+//                }
+//                if (val[i] > reallyPoints && i != Z) {
+//                    val[i] = Math.abs(val[i] - (reallyPoints));
+//                }
+                val[i] = ((maxPointTheory * Math.round(2 * event.values[i])));
             }
 
 
@@ -128,7 +150,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 
     public void rightClickFunction(View v) {
         ps.println("RIGHT_CLICK");
-ps.flush();
+        ps.flush();
     }
 
     public void leftClickFunction(View v) {
@@ -140,21 +162,28 @@ ps.flush();
     protected void onPause() {
         // unregister listener
         super.onPause();
+
         if (sensorManager != null)
             sensorManager.unregisterListener(this);
     }
 
     @Override
-    public void onBackPressed() {
-        isReceivingImages = false;
-        super.onBackPressed();
-        if (sensorManager != null) {
-            sensorManager.unregisterListener(this);
-        }
-        if (ps != null) {
-            ps.flush();
-            ps.close();
-            ps = null;
+    protected void onStop() {
+        super.onStop();
+        closeAll();
+    }
+
+
+    private void closeAll() {
+
+        try {
+            if (ps != null) {
+                ps.println("Null");
+                ps.flush();
+                ps.close();
+                ps = null;
+            }
+        } catch (Exception e) {
         }
         if (bf != null) {
             try {
@@ -167,6 +196,7 @@ ps.flush();
             bf = null;
 
         }
+
         if (InternetConnection.returnSocket != null) {
             try {
                 InternetConnection.returnSocket.close();
@@ -176,6 +206,16 @@ ps.flush();
             InternetConnection.returnSocket = null;
         }
         System.gc();
+    }
+
+    @Override
+    public void onBackPressed() {
+        isReceivingImages = false;
+        super.onBackPressed();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
+        }
+        closeAll();
         startActivity(new Intent(MouseUIActivity.this, MainActivity.class));
 
     }
@@ -185,18 +225,19 @@ ps.flush();
             return;
         }
 
-        ps.println("x:" + x_axis.getText().toString() + "@@" + "y:" + y_axis.getText().toString() + "@@" + "z:" + z_axis.getText().toString());
+        ps.println("Motion:x:" + x_axis.getText().toString() + "@@" + "y:" + y_axis.getText().toString() + "@@" + "z:" + z_axis.getText().toString());
 
 
     }
-private Thread thread;
-    public void startReceivingImages(final Activity activity) {
-        if (ps == null||bf==null||(thread!=null&&thread.isAlive())) {
+
+    private Thread thread;
+
+    public void startReceivingImages(final Activity activity) throws RuntimeException {
+        if (ps == null || bf == null || (thread != null && thread.isAlive())) {
             return;
         }
         final Bitmap[] bitmapimage = new Bitmap[1];
-
-         thread = new Thread() {
+        thread = new Thread() {
             @Override
             public void run() {
                 runOnUiThread(new Thread() {
@@ -207,13 +248,16 @@ private Thread thread;
                 });
                 while (isReceivingImages) {
                     try {
+
+
                         ps.println("SCREENSHOT");
-                        Thread.sleep(1000);
+
+                        Thread.sleep(600);
                         if (!isReceivingImages) {
                             break;
                         }
                         int bytesRead;
-                        byte[] pic = new byte[5000 * 1024];
+                        byte[] pic = new byte[1000 * 1000];
                         try {
                             bytesRead = bf.read(pic, 0, pic.length);
 
@@ -224,20 +268,35 @@ private Thread thread;
                                 @Override
                                 public void run() {
 
+                                    try {
+                                        fr.setBackgroundDrawable(draw);
+                                    } catch (Exception e) {
 
-                                    fr.setBackgroundDrawable(draw);
-
+                                    }
                                 }
                             });
+
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            e.printStackTrace();
+                            isReceivingImages = false;
+                            startActivity(new Intent(MouseUIActivity.this, MainActivity.class));
+                        } catch (NullPointerException e) {
+                            e.printStackTrace();
+                            isReceivingImages = false;
+                            startActivity(new Intent(MouseUIActivity.this, MainActivity.class));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            startActivity(new Intent(MouseUIActivity.this, MainActivity.class
-                            ));
-                            return;
+
+                        } catch (OutOfMemoryError error) {
+                            error.printStackTrace();
+                            System.gc();
+
                         }
 
 
                     } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     System.gc();
@@ -258,25 +317,32 @@ private Thread thread;
             sensorManager.unregisterListener(this);
         }
         if (tab.getText().toString().equalsIgnoreCase("MousePad")) {
+            try {
+                isReceivingImages = true;
+                FrameLayout ll = new FrameLayout(this);
 
-            isReceivingImages = true;
-            FrameLayout ll = new FrameLayout(this);
-
-            ll.setId(12345);
-            getFragmentManager().beginTransaction().add(ll.getId(), new PageOneFragment(), "Mousepad").commit();
-            fragContainer.addView(ll);
-            startReceivingImages(this);
-
+                ll.setId(12345);
+                getFragmentManager().beginTransaction().add(ll.getId(), new PageOneFragment(), "Mousepad").commit();
+                fragContainer.addView(ll);
+                startReceivingImages(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else if (tab.getText().toString().equalsIgnoreCase("Keyboard")) {
-            FrameLayout ll = new FrameLayout(this);
             isReceivingImages = false;
+            FrameLayout ll = new FrameLayout(this);
             ll.setId(12345);
             getFragmentManager().beginTransaction().add(ll.getId(), new PageThreeFragment(), "Keyboard").commit();
+            fragContainer.addView(ll);
+        } else if (tab.getText().toString().equalsIgnoreCase("Close PC")) {
+            isReceivingImages = false;
+            FrameLayout ll = new FrameLayout(this);
+            ll.setId(12345);
+            getFragmentManager().beginTransaction().add(ll.getId(), new PageFourFragment(), "Close PC").commit();
             fragContainer.addView(ll);
         } else {
             isReceivingImages = false;
             FrameLayout ll = new FrameLayout(this);
-
             ll.setId(123456);
             getFragmentManager().beginTransaction().add(ll.getId(), new PaneTwoFragment(), "Motion sensor").commit();
             fragContainer.addView(ll);
@@ -289,17 +355,35 @@ private Thread thread;
 
     public void keyboardFunction(View v) {
         Button b = (Button) v;
-        ps.println("keyboard:" + b.getText().toString());
-ps.flush();
+
+        if (b.getText().toString().equalsIgnoreCase("send")) {
+            TextView txtView= (TextView) findViewById(R.id.textScreen);
+
+            ps.println("keyboard Word:" + txtView.getText().toString());
+            ps.flush();
+            txtView.setText("");
+        } else {
+            ps.println("keyboard:" + toUperCase(b.getText().toString()));
+            ps.flush();
+        }
     }
+    private String toUperCase(String low){
+       String out="";
+        for(int i=0;i<low.length();i++){
+            out+=Character.toUpperCase(low.charAt(i));
+        }
+        return out;
+    }
+
+
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
     }
-
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
     }
+
 }
