@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 /**
  * Created by tsoglani on 26/6/2015.
@@ -25,7 +26,7 @@ public class PageOneFragment extends Fragment {
             try {
 
 
-                FrameLayout fl = (FrameLayout) v;
+                ImageView fl = (ImageView) v;
                 MouseUIActivity.ps.println("x:" + ((int) (5000 - 5000.0 * event.getY() / fl.getHeight())) + "@@" + "y:" + +((int) (5000 - 5000.0 * event.getY() / fl.getHeight())) + "@@" + "z:" + ((int) (5000.0 * event.getX() / fl.getWidth())));
                 if (MotionEvent.ACTION_DOWN == event.getAction()) {
                     if (point1 == null) {
@@ -97,7 +98,7 @@ public class PageOneFragment extends Fragment {
             }
         });
 
-        FrameLayout fl = (FrameLayout) getActivity().findViewById(com.nikos.tsoglani.androidmouse.R.id.mousepad);
+        ImageView fl = (ImageView) getActivity().findViewById(R.id.mousepad_screen);
         fl.setOnTouchListener(onTouchListener);
 
     }

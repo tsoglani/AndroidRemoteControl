@@ -19,12 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.DataInputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
 
 

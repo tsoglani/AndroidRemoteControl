@@ -1,24 +1,28 @@
 package com.nikos.tsoglani.androidmouse;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +37,14 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
     public static PrintWriter ps;
     public static DataInputStream bf;
     private ActionBar bar;
+
+
+    ///<used for images>
+    private Bitmap bitmapimage;
+    private AsyncTask<Void, Void, Void> asTask;
+    int width = -1, height = -1;
+    private static Object lock = new Object();
+    ///</used for images>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +78,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
         bar.addTab(bar.newTab().setText("MousePad").setTabListener(this));
         bar.addTab(bar.newTab().setText("Keyboard").setTabListener(this));
         bar.addTab(bar.newTab().setText("Close PC").setTabListener(this));
-
+        bar.addTab(bar.newTab().setText("Spy Camera").setTabListener(this));
         bar.addTab(bar.newTab().setText("Motion Sensor").setTabListener(this));
 
     }
@@ -230,16 +242,59 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
 
     }
 
-    private Thread thread;
+    //private Thread thread;
 
-    public void startReceivingImages(final Activity activity) throws RuntimeException {
-        if (ps == null || bf == null || (thread != null && thread.isAlive())) {
+    private boolean isRunning = false;
+private int sleepintTimeForScrenShot;
+    public void startReceivingImages(final Activity activity, final boolean getComputerScreen) throws RuntimeException {
+        if (bitmapimage != null) {
+            bitmapimage.recycle();
+        }
+        bitmapimage = null;
+        if (ps == null || bf == null) {
             return;
         }
-        final Bitmap[] bitmapimage = new Bitmap[1];
-        thread = new Thread() {
+        final String sendCommand;
+        if (getComputerScreen) {
+            sendCommand = "SCREENSHOT";
+            sleepintTimeForScrenShot = 600;
+        } else {
+
+            sendCommand = "CAM_SCREENSHOT";
+            sleepintTimeForScrenShot = 700;
+        }
+
+        if (isRunning) {
+            new Thread() {
+                public void run() {
+                    try {
+                        isReceivingImages = false;
+                        Thread.sleep(601);
+                        isReceivingImages = true;
+                        startReceivingImages(activity, getComputerScreen);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        }
+
+        if (width == -1)
+            width = getWindowManager().getDefaultDisplay().getWidth();
+        if (height == -1) {
+            height = getWindowManager().getDefaultDisplay().getHeight();
+        }
+        asTask = new AsyncTask<Void, Void, Void>() {
             @Override
-            public void run() {
+            protected void onPreExecute() {
+                isRunning = true;
+                super.onPreExecute();
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
                 runOnUiThread(new Thread() {
                     @Override
                     public void run() {
@@ -249,61 +304,118 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
                 while (isReceivingImages) {
                     try {
 
-
-                        ps.println("SCREENSHOT");
-
-                        Thread.sleep(600);
+                        Thread.sleep(sleepintTimeForScrenShot);
                         if (!isReceivingImages) {
                             break;
                         }
-                        int bytesRead;
-                        byte[] pic = new byte[1000 * 1000];
-                        try {
-                            bytesRead = bf.read(pic, 0, pic.length);
+                        synchronized (lock) {
+                            ps.println(sendCommand);
+                            ps.flush();
 
-                            bitmapimage[0] = BitmapFactory.decodeByteArray(pic, 0, bytesRead);
-                            final FrameLayout fr = (FrameLayout) activity.findViewById(com.nikos.tsoglani.androidmouse.R.id.mousepad);
-                            final Drawable draw = new BitmapDrawable(activity.getResources(), bitmapimage[0]);
-                            activity.runOnUiThread(new Thread() {
-                                @Override
-                                public void run() {
+                            int bytesRead=0;
+                            byte[] pic = new byte[1000 * 1000];
+                            try {
+                                    bytesRead = bf.read(pic, 0, pic.length);
+                              try {
+                                  bitmapimage = BitmapFactory.decodeByteArray(pic, 0, bytesRead);
 
-                                    try {
-                                        fr.setBackgroundDrawable(draw);
-                                    } catch (Exception e) {
+                                  if (getComputerScreen) {
+                                      if (bitmapimage != null) {
+                                          bitmapimage.prepareToDraw();
+                                          // final Drawable draw = new BitmapDrawable(activity.getResources(), bitmapimage);
+                                          final ImageView iv = (ImageView) activity.findViewById(R.id.mousepad_screen);
+                                          activity.runOnUiThread(new Thread() {
+                                              @Override
+                                              public void run() {
 
-                                    }
-                                }
-                            });
+                                                  try {
+                                                      bitmapimage.prepareToDraw();
+                                                      iv.setImageBitmap(bitmapimage);
+                                                  } catch (final Exception e) {
+                                                      e.printStackTrace();
+                                                      e.printStackTrace();
+                                                  }
+                                              }
+                                          });
+                                      }
+                                  } else {
 
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            e.printStackTrace();
-                            isReceivingImages = false;
-                            startActivity(new Intent(MouseUIActivity.this, MainActivity.class));
-                        } catch (NullPointerException e) {
-                            e.printStackTrace();
-                            isReceivingImages = false;
-                            startActivity(new Intent(MouseUIActivity.this, MainActivity.class));
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                                      final ImageView iv = (ImageView) activity.findViewById(R.id.imageView);
 
-                        } catch (OutOfMemoryError error) {
-                            error.printStackTrace();
-                            System.gc();
+                                      activity.runOnUiThread(new Thread() {
+                                          @Override
+                                          public void run() {
+                                              if (bitmapimage != null && iv != null) {
+                                                  bitmapimage.prepareToDraw();
+                                                  iv.setImageBitmap(bitmapimage);
+                                              }
+                                          }
+                                      });
+                                  }
+                              }catch (Exception e){
+                                  String s= new String(pic);
+                                  if(s.equalsIgnoreCase("NO_CAMERA")){
+                                      new Handler().post(new Runnable() {
+                                          @Override
+                                          public void run() {
+                                         Toast.makeText(getApplicationContext(),"No Camera",Toast.LENGTH_LONG).show();
+                                          }
+                                      });
+                                  }else {
+                                      throw new NullPointerException();
+                                  }
+                              }
+                            } catch (ArrayIndexOutOfBoundsException e) {
+                                e.printStackTrace();
+                                isReceivingImages = false;
+                                startActivity(new Intent(MouseUIActivity.this, MainActivity.class));
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                                isReceivingImages = false;
+                                startActivity(new Intent(MouseUIActivity.this, MainActivity.class));
+                            } catch (Exception e) {
+                                e.printStackTrace();
 
+                            } catch (OutOfMemoryError error) {
+                                error.printStackTrace();
+                                System.gc();
+
+                            }
                         }
-
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    System.gc();
+                    //  System.gc();
                 }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                isRunning = false;
+                if (!getComputerScreen) {
+                    if (ps != null)
+                        ps.println("STOP_CAM");
+                }
+
+                if (bitmapimage != null)
+                    bitmapimage.recycle();
+                bitmapimage = null;
             }
         };
-        thread.start();
+        asTask.execute();
+//        thread = new Thread() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        };
+//        thread.start();
     }
 
     private FrameLayout fl;
@@ -324,7 +436,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
                 ll.setId(12345);
                 getFragmentManager().beginTransaction().add(ll.getId(), new PageOneFragment(), "Mousepad").commit();
                 fragContainer.addView(ll);
-                startReceivingImages(this);
+                startReceivingImages(this, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -340,6 +452,41 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
             ll.setId(12345);
             getFragmentManager().beginTransaction().add(ll.getId(), new PageFourFragment(), "Close PC").commit();
             fragContainer.addView(ll);
+        } else if (tab.getText().toString().equalsIgnoreCase("Spy Camera")) {
+            isReceivingImages = false;
+            FrameLayout ll = new FrameLayout(this);
+
+            ll.setId(12345);
+            getFragmentManager().beginTransaction().add(ll.getId(), new WebCameraFragment(), "Spy Camera").commit();
+            fragContainer.addView(ll);
+
+            final ProgressDialog ringProgressDialog = ProgressDialog.show(MouseUIActivity.this, "Please wait ...", "Be sure that the computer has Camera ...", true);
+            ringProgressDialog.setCancelable(true);
+            ps.println("START_CAMERA");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(650);
+
+                        runOnUiThread(new Thread() {
+                            @Override
+                            public void run() {
+                                isReceivingImages = true;
+                                startReceivingImages(MouseUIActivity.this, false);
+                            }
+                        });
+                        // Here you should write your time consuming task...
+                        // Let the progress ring for 10 seconds...
+                        Thread.sleep(3000);
+
+                    } catch (Exception e) {
+
+                    }
+                    ringProgressDialog.dismiss();
+                }
+            }).start();
+
         } else {
             isReceivingImages = false;
             FrameLayout ll = new FrameLayout(this);
@@ -357,7 +504,7 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
         Button b = (Button) v;
 
         if (b.getText().toString().equalsIgnoreCase("send")) {
-            TextView txtView= (TextView) findViewById(R.id.textScreen);
+            TextView txtView = (TextView) findViewById(R.id.textScreen);
 
             ps.println("keyboard Word:" + txtView.getText().toString());
             ps.flush();
@@ -367,20 +514,21 @@ public class MouseUIActivity extends ActionBarActivity implements SensorEventLis
             ps.flush();
         }
     }
-    private String toUperCase(String low){
-       String out="";
-        for(int i=0;i<low.length();i++){
-            out+=Character.toUpperCase(low.charAt(i));
+
+    private String toUperCase(String low) {
+        String out = "";
+        for (int i = 0; i < low.length(); i++) {
+            out += Character.toUpperCase(low.charAt(i));
         }
         return out;
     }
-
 
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
     }
+
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
 
