@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidMouse</string>
+    <string name="app_name">Remote Control</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

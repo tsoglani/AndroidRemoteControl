@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="com.example.tsoglani.androidmouse.MouseUIActivity">
+    tools:context="com.nikos.tsoglani.androidmouse.MouseUIActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="X_Axis"
+        android:text="X_Axis(Width)"
         android:id="@+id/textView"
         android:textColor="@color/abc_search_url_text"
         android:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/abc_search_url_text"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Y_Axis"
+        android:text="Y_Axis (Height)"
         android:id="@+id/textView2"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
@@ -33,21 +33,21 @@
         android:textColor="@color/abc_search_url_text"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Z_Axis"
+        android:text="Z_Axis (Width)"
         android:id="@+id/textView4"
         android:layout_below="@+id/textView2"
-        android:layout_toLeftOf="@+id/x_axis"
-        android:layout_toStartOf="@+id/x_axis" />
+        android:layout_toStartOf="@+id/y_axis"
+        android:layout_toLeftOf="@+id/y_axis" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
         android:id="@+id/x_axis"
+        android:layout_marginLeft="55dp"
+        android:layout_marginStart="55dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp" />
+        android:layout_toEndOf="@+id/textView" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="com.example.tsoglani.androidmouse.MouseUIActivity"
+    android:keepScreenOn="true"
+    tools:context="com.nikos.tsoglani.androidmouse.MouseUIActivity"
     android:id="@+id/app">
 
 

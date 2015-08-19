@@ -6,24 +6,52 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/ic_launcher2"
+    android:scaleType = "centerCrop"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/internetbuttonn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="112dp"
         android:onClick="connectFunction"
-        android:text="Connect with PC device via internet"
-        android:layout_alignParentTop="true"
+        android:text="Connect with PC device via WLan"
+        android:layout_above="@+id/bluetoothbutton"
+        android:layout_alignLeft="@+id/bluetoothbutton"
+        android:layout_alignStart="@+id/bluetoothbutton"
+        android:layout_marginBottom="57dp"
+        android:layout_alignRight="@+id/bluetoothbutton"
+        android:layout_alignEnd="@+id/bluetoothbutton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect with PC device via Bluetooth"
+        android:id="@+id/bluetoothbutton"
+        android:onClick="bluetoothConnectFunction"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect with PC device via bluetooth"
-        android:id="@+id/bluetoothbutton"
-        android:onClick="bluetoothConnectFunction"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:text="Info"
+        android:onClick="infoFunction"
+        android:id="@+id/button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect with PC device via Internet"
+        android:id="@+id/button4"
+        android:onClick="internet"
+        android:layout_above="@+id/button"
+        android:layout_alignLeft="@+id/bluetoothbutton"
+        android:layout_alignStart="@+id/bluetoothbutton"
+        android:layout_marginBottom="60dp" />
+
+
 </RelativeLayout>
