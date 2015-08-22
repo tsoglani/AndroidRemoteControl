@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/myshape"
+    tools:context=".MyWidget"
+        android:orientation="vertical"
+     android:gravity="center_vertical|center_horizontal"
+         >
+     
+
+  
+
+    <Button
+        android:id="@+id/button1"
+            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+      
+        android:text="Open MobileFinder" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="20dp"
+        android:layout_height="24dp"
+        android:background="@drawable/my_circle"
+        
+        android:text="Open MobileFinder" />
+
+</LinearLayout><!-- From: file:/media/tsoglani/Τοπικός%20δίσκος%20E/AndroidStudioProjects/MobileFinder/app/src/main/res/layout/my_widget.xml -->
