@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tsoglani.mobilefinder">
+    package="com.nikos.tsoglani.androidmouse.test">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="17" />
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="22" />
 
     <application>
         <uses-library android:name="android.test.runner" />
     </application>
 
     <instrumentation android:name="android.test.InstrumentationTestRunner"
-                     android:targetPackage="com.tsoglani.mobilefinder"
+                     android:targetPackage="com.nikos.tsoglani.androidmouse"
                      android:handleProfiling="false"
                      android:functionalTest="false"
-                     android:label="Tests for com.tsoglani.mobilefinder"/>
+                     android:label="Tests for com.nikos.tsoglani.androidmouse"/>
 </manifest>

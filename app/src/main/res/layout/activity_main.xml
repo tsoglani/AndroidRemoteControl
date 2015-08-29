@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ebm="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/one"
+    android:scaleType = "centerCrop"
+    tools:context=".MainActivity">
+    <lt.lemonlabs.android.expandablebuttonmenu.ExpandableMenuOverlay
+        android:id="@+id/button_menu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+
+        android:src="@drawable/ci"
+        ebm:closeButtonSrc="@drawable/circle_close"
+        ebm:leftButtonSrc="@drawable/circle_1"
+        ebm:midButtonSrc="@drawable/circle_2"
+        ebm:rightButtonSrc="@drawable/circle_3"
+        ebm:leftButtonText="@string/action_left"
+        ebm:midButtonText="@string/action_center"
+        ebm:rightButtonText="@string/action_right"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Info"
+        android:id="@+id/button"
+        android:onClick="infoFunction"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>
